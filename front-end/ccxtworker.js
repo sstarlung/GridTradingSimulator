@@ -4,7 +4,7 @@ console.log("worker:", "Loaded ccxt version:"+self.ccxt.version);
 
 // load exchange info
 const exchange = new ccxt.bitfinex({ enableRateLimit: true, proxy: 'https://cors-anywhere.herokuapp.com/' });
-//const exchange = new ccxt.ftx({ enableRateLimit: true, proxy: 'https://corsproxy.atwebpages.com/proxy.php?csurl=' });
+//const exchange = new ccxt.binance({ enableRateLimit: true, proxy: 'https://cors-anywhere.herokuapp.com/' });
 
 var preTimeRange = 0;
 var preSymbol = "";

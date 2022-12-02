@@ -4,6 +4,7 @@ class SimuData {
         this.symbol = "";
         this.labels = [];
         this.prices = [];
+        this.pricesRev = [];
         this.trading = [];
         
         this.gridUp = 0;
@@ -18,12 +19,19 @@ class SimuData {
     updatePrices(data, coinName, timeRange) {
         this.labels = data[0];
         this.prices = data[1];
+        this.pricesRev = Array.from(data[1]).reverse();
         this.symbol = coinName;
         this.timeRange = timeRange;
     }
     
-    getPrices() {
-        return this.prices;
+    getPrices(rev = false) {
+        console.log("main", "rev flag:" + rev);
+        if (rev) {
+            return this.pricesRev;
+        }
+        else {
+            return this.prices;
+        }
     }
     
     getLabels() {
@@ -37,10 +45,6 @@ class SimuData {
         this.invest = param.invest;
         this.direction = param.direction;
         if (param.gridType=='A') {this.AS=true;} else {this.AS=false;}
-    }
-    
-    getSimuData() {
-        return [this.gridUp, this.gridLow, this.gridNum, this.invest, this.direction, this.AS, this.prices];
     }
 
 }
@@ -122,20 +126,24 @@ function handleReceivedList(symbols) {
             }
             preCoin = coinId;
             
-            updateCalBtnState(false);
+            //updateCalBtnState(false);
+            coinShow.innerHTML = coinName;
+            //coinShow.classList.remove("spinner-grow", "spinner-grow-sm");
         });
         coinslist.appendChild(btn);
     });
     
-    updateCalBtnState(false);
+    //updateCalBtnState(false);
+    coinShow.innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Coin';
+    //coinShow.classList.remove("spinner-border", "spinner-border-sm");
+    //coinShow.classList.add("spinner-grow", "spinner-grow-sm");
 }
 
 function handleReceivedPrice(prices, coinName, range) {
     //console.log("main:", prices);
     updatePriceChart(prices);
     simudata.updatePrices(prices, coinName, range);
-    //temp
-    updateTradingChart();
+    updateCalBtnState(false);
 }
 
 function changeTF(node, range) {
@@ -160,7 +168,7 @@ function changeTF(node, range) {
         handleReceivedPrice(event.data, simudata.symbol, range);
     };
     
-    updateCalBtnState(false);
+    //updateCalBtnState(false);
 }
 
 function putResults(profit_total, profit_grid, profit_posi, trading_complete) {
@@ -227,7 +235,6 @@ function updatePriceChart(data) {
     if (chart == undefined) {
         const chart = initPriceChart();
     }
-
     let newdata = {
         labels: data[0],
         datasets: [{
@@ -245,28 +252,29 @@ function updatePriceChart(data) {
     chart.update();
 }
 
-function updateTradingChart() {
-    buy = [[1,60],[10,50]];
-    sell = [[2,77],[13,65]];
-    
-    console.log("main", "buy: " + buy);
-    console.log("main", "sell: " + sell);
+function updateTradingChart(traj_buy, traj_sell) {
+//    console.log("main", "buy: " + Array.from(traj_buy));
+//    console.log("main", "sell: " + Array.from(traj_sell));
     
     let labels = simudata.getLabels();
     
     let buyArr = [];
     let sellArr = [];
-    buy.forEach((val, idx) => { buyArr[idx]={x: labels[val[0]], y: val[1]};});
-    sell.forEach((val, idx) => { sellArr[idx]={x: labels[val[0]], y: val[1]};});
+    Array.from(traj_buy).forEach((val, idx) => { arr=Array.from(val); buyArr.push({x: labels[arr[0]], y: arr[1]}); } );
+    Array.from(traj_sell).forEach((val, idx) => { arr=Array.from(val); sellArr.push({x: labels[arr[0]], y: arr[1]}); });
+    console.log("main", JSON.stringify(buyArr));
+    console.log("main", JSON.stringify(sellArr));
     
     var buyChart = {
         type: 'scatter',
         backgroundColor: 'red',
+        pointRadius: 2,
         data: buyArr
     };
     var sellChart = {
         type: 'scatter',
         backgroundColor: 'green',
+        pointRadius: 2,
         data: sellArr
     };
     
@@ -279,8 +287,13 @@ function updateTradingChart() {
     chart.update();
 }
 
-function reverseAct() {
-    let data = [simudata.getLabels(),simudata.getPrices().slice().reverse()];
+function reversePrices() {
+    let data = [simudata.getLabels(), simudata.getPrices(true)];
+    updatePriceChart(data);
+}
+
+function normalPrices() {
+    let data = [simudata.getLabels(), simudata.getPrices(false)];
     updatePriceChart(data);
 }
 
@@ -299,8 +312,8 @@ function getSettings() {
     return param;
 }
 
-function getPrices() {
-    let prices = simudata.prices;
+function getPrices(rev=false) {
+    let prices = simudata.getPrices(rev);
     console.log("main:", prices);
     return prices;
 }
@@ -313,8 +326,3 @@ getCoinList();
 
 const chart = initPriceChart();
 
-/*let param = getSettings();
-console.log("main:", param);
-simudata.updateParam(param);
-
-[gridUp, gridLow, gridNum, invest, direction, isAS, prices] = simudata.getSimuData();*/

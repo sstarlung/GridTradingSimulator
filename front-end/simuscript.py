@@ -7,11 +7,10 @@ Created on Fri Oct 28 14:37:17 2022
 
 import numpy as np
 import pandas as pd
-from js import getPrices, getSettings, putResults
-
-
-def calculate():
-    prices = getPrices()
+from js import getPrices, getSettings, putResults, updateTradingChart
+    
+def calculate(rev=False):
+    prices = getPrices(rev)
 
     param = getSettings()
     gridUp = param.priceUp
@@ -24,7 +23,7 @@ def calculate():
     
     isAS=True if gridType=="A" else False
     
-    print(f"u={gridUp}, l={gridLow}, n={gridNum}, i={invest}, d={direction}, t={gridType}, is={isAS}")
+    print(f"u={gridUp}, l={gridLow}, n={gridNum}, i={invest}, d={direction}, t={gridType}, is={isAS}, r={rev}")
 
     # calculate grid
     if isAS:
@@ -52,6 +51,8 @@ def calculate():
 
 
     # calculate trading
+    traj_buy = []
+    traj_sell = []
     sample = 1
     for pri in prices[1:]:
         rec_buy = ((pri <= grid[:-1]) & (start_price > grid[:-1]))
@@ -62,10 +63,10 @@ def calculate():
         # for plot
         points_buy = np.where(rec_buy)[0]
         if len(points_buy)>0:
-            traj_buy += list(zip([sample]*len(points_buy), grid[:-1][points_buy].tolist()))
+            traj_buy += [list(t) for t in zip([sample]*len(points_buy), grid[:-1][points_buy].tolist())]
         points_sell = np.where(rec_sell)[0]
         if len(points_sell)>0:
-            traj_sell += list(zip([sample]*len(points_sell), grid[:-1][points_sell].tolist()))
+            traj_sell += [list(t) for t in zip([sample]*len(points_sell), grid[:-1][points_sell].tolist())]
         
         if rec_buy.sum() > 0:
             start_price = min(grid[:-1][rec_buy])
@@ -94,6 +95,10 @@ def calculate():
     
     # update result to html
     putResults(profit_total, profit_grid, profit_posi, trading_complete)
+    #traj_buy = [[1, 83.0], [11, 83.0]]
+    #traj_sell = [[11,60], [21,62]]
+    updateTradingChart(traj_buy, traj_sell)
+#    updateTradingChart()
 #    Element("profitTotal1").element.textContent = f"${profit_total:.3f}"
 #    Element("profitTotal2").element.textContent = f"{profit_total/invest/timeRange*365:.3%}"
 #    Element("profitGrid1").element.textContent = f"${profit_grid:.3f}"

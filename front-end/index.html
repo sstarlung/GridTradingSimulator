@@ -18,6 +18,8 @@
         
         <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
         <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
 
 
         <style>
@@ -91,7 +93,7 @@
                 aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                Coin
+                Loading
             </button>
             <a class="navbar-brand text-end px-3 fs-6 " href="#"
                 >Grid Trading Simulator</a>
@@ -128,7 +130,7 @@
                                             <input type="number"
                                                    class="form-input"
                                                    id="upper"
-                                                   value="100" />
+                                                   value="600" />
                                         </td>
                                       </tr>
                                       <tr>
@@ -137,7 +139,7 @@
                                             <input type="number"
                                                    class="form-input"
                                                    id="lower"
-                                                   value="60" />
+                                                   value="300" />
                                         </td>
                                       </tr>
                                       <tr>
@@ -146,7 +148,7 @@
                                             <input type="number"
                                                    class="form-input"
                                                    id="gridNum"
-                                                   value="40" />
+                                                   value="30" />
                                         </td>
                                       </tr>
                                       <tr>
@@ -155,7 +157,7 @@
                                             <input type="number"
                                                    class="form-input"
                                                    id="invest"
-                                                   value="800" />
+                                                   value="600" />
                                         </td>
                                       </tr>
                                       <tr>
@@ -187,15 +189,17 @@
                                             id="calReal"
                                             class="btn btn-sm btn-primary"
                                             disabled
-                                            py-click="calculate()">
+                                            onclick="normalPrices()"
+                                            py-click="calculate(False)">
                                             Practical真實模擬
                                         </button>
                                         <button
                                             type="button"
                                             id="calInverse"
                                             class="btn btn-sm btn-outline-danger"
-                                            onclick="reverseAct()"
-                                            py-click="calculate()">
+                                            disabled
+                                            onclick="reversePrices()"
+                                            py-click="calculate(True)">
                                             Inverse反向模擬
                                         </button>
                                     </div>
