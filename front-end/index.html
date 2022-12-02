@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="" />
+        <meta
+            name="author"
+            content="Mark Otto, Jacob Thornton, and Bootstrap contributors" />
+        <meta name="generator" content="Hugo 0.98.0" />
+        <title>Dashboard Template · Bootstrap v5.2</title>
+
+        <link
+            rel="canonical"
+            href="https://getbootstrap.com/docs/5.2/examples/dashboard/" />
+
+        <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet" />
+        
+        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+
+            .b-example-divider {
+                height: 3rem;
+                background-color: rgba(0, 0, 0, 0.1);
+                border: solid rgba(0, 0, 0, 0.15);
+                border-width: 1px 0;
+                box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1),
+                    inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+            }
+
+            .b-example-vr {
+                flex-shrink: 0;
+                width: 1.5rem;
+                height: 100vh;
+            }
+
+            .bi {
+                vertical-align: -0.125em;
+                fill: currentColor;
+            }
+
+            .nav-scroller {
+                position: relative;
+                z-index: 2;
+                height: 2.75rem;
+                overflow-y: hidden;
+            }
+
+            .nav-scroller .nav {
+                display: flex;
+                flex-wrap: nowrap;
+                padding-bottom: 1rem;
+                margin-top: -1px;
+                overflow-x: auto;
+                text-align: center;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+        </style>
+
+        <!-- Custom styles for this template -->
+        <link href="dashboard.css" rel="stylesheet" />
+    </head>
+    <body>
+        <header
+            class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+            <button
+                class="navbar-toggler collapsed mx-2"
+                type="button"
+                id="currCoin"
+                data-bs-toggle="collapse"
+                data-bs-target="#sidebarMenu"
+                data-bs-auto-close="true"
+                aria-controls="sidebarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Coin
+            </button>
+            <a class="navbar-brand text-end px-3 fs-6 " href="#"
+                >Grid Trading Simulator</a>
+            
+            <div id="errAlert" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+              <strong>Error!</strong> Your browser doesn't support it!! 瀏覽器不支援
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>            
+        </header>
+
+        <div class="container-fluid">
+            <div class="row">
+                <nav
+                    id="sidebarMenu"
+                    class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                    <div id="coinsList" class="position-sticky py-3  navbar-nav-scroll" style="--bs-scroll-height: calc(100vh - 48px);">
+<!--                    build from js
+                        <button type="button" class="btn btn-outline-primary btn-sm">BTC/USD</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm">ETH/USDT</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm">BTC-PERP</button>
+-->
+                    </div>
+                </nav>
+                <main class="col-md-9 ms-sm-auto col-lg-10">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 justify-content-center">
+                                <h2 class="h2">Settings 參數設定</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                      <tr>
+                                        <td>Upper Bound 網格上限</td>
+                                        <td align="right">
+                                            <input type="number"
+                                                   class="form-input"
+                                                   id="upper"
+                                                   value="100" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Lower Bound 網格下限</td>
+                                        <td align="right">
+                                            <input type="number"
+                                                   class="form-input"
+                                                   id="lower"
+                                                   value="60" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Grid Num 網格數量</td>
+                                        <td align="right">
+                                            <input type="number"
+                                                   class="form-input"
+                                                   id="gridNum"
+                                                   value="40" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Invest $ 投入金額</td>
+                                        <td align="right">
+                                            <input type="number"
+                                                   class="form-input"
+                                                   id="invest"
+                                                   value="800" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Direction 交易走勢</td>
+                                        <td align="right">
+                                            <select name="direct" id="direction">
+                                              <option value="1">long 做多</option>
+                                              <option value="0">neutral 震盪</option>
+                                              <option value="-1">short 做空</option>
+                                            </select>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>Grid Type 網格類型</td>
+                                        <td align="right">
+                                            <select name="gridType" id="gridType">
+                                              <option value="A">Arithmetic等差</option>
+                                              <option value="G">Geometric等比</option>
+                                            </select>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                </div>
+
+                                <div class="btn-toolbar mb-2 mb-md-0 justify-content-center">
+                                    <div class="btn-group me-2">
+                                        <button
+                                            type="button"
+                                            id="calReal"
+                                            class="btn btn-sm btn-primary"
+                                            disabled
+                                            py-click="calculate()">
+                                            Practical真實模擬
+                                        </button>
+                                        <button
+                                            type="button"
+                                            id="calInverse"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="reverseAct()"
+                                            py-click="calculate()">
+                                            Inverse反向模擬
+                                        </button>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        id="interval"
+                                        data-bs-toggle="dropdown"
+                                        disabled
+                                        aria-expanded="false"
+                                        class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                                        <span
+                                            data-feather="calendar"
+                                            class="align-text-bottom"></span>
+                                        Time Range-Frame 範圍-間隔
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="interval">
+                                        <li><a id="range30" class="dropdown-item active" href="#" onclick="changeTF(this,30)">30Days-1Hour</a></li>
+                                        <li><a id="range15" class="dropdown-item" href="#" onclick="changeTF(this,15)">15Days-15Min</a></li>
+                                        <li><a id="range7" class="dropdown-item" href="#" onclick="changeTF(this,7)">7Weeks-5Min</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <h2 class="h2">Result 模擬結果</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">項目</th>
+                                                <th scope="col">數量</th>
+                                                <th scope="col">年化</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Total Profit 總盈虧</td>
+                                                <td id="profitTotal1">$0</td>
+                                                <td id="profitTotal2">0%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Grid Profit 網格盈虧</td>
+                                                <td id="profitGrid1">$0</td>
+                                                <td id="profitGrid2">0%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Position Profit 持倉盈虧</td>
+                                                <td id="profitPos1">$0</td>
+                                                <td id="profitPos2">0%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Arbitrage Num 套利次數</td>
+                                                <td id="arbiNum1">0</td>
+                                                <td id="arbiNum2">0/day</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div
+                        class=" justify-content-center pt-3 pb-2 mb-3 border-bottom">
+                        <h2 class="h2">Chart 價格圖表</h2>
+
+                        <canvas
+                            class="my-4 w-100"
+                            id="myChart"
+                            width="900"
+                            height="380"></canvas>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+            integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+            integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+            crossorigin="anonymous"></script>
+        
+        <script src="dashboard.js"></script>
+        
+        <py-config type="toml">
+            packages = ["numpy", "pandas"]
+        </py-config>
+        
+        <py-script src="./simuscript.py">  </py-script>
+    </body>
+</html>
