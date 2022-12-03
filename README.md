@@ -9,6 +9,6 @@ note: [request a temporary access of CORS proxy](https://cors-anywhere.herokuapp
 
 ## Screen Shot
 - Desktop
-
+![Image](https://github.com/sstarlung/GridTradingSimulator/blob/main/Desktop.png)
 - Mobile
-
+<img src="https://github.com/sstarlung/GridTradingSimulator/blob/main/Mobile.png" width="40%">
